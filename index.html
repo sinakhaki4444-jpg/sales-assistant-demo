@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>دستیار فروش هوشمند</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --bg: #080d1a;
+            --card: #111a2d;
+            --blue: #5388ff;
+            --cyan: #42d9ff;
+            --text: #f1f5ff;
+            --muted: #8d9bb7;
+            --border: rgba(255,255,255,0.09);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Vazirmatn', Tahoma, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(ellipse at 50% 0%, #192c52 0%, transparent 55%),
+                var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 460px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 22px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 46px;
+            height: 46px;
+            display: grid;
+            place-items: center;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #477bff, #35d6f4);
+            box-shadow: 0 5px 25px #477bff40;
+            font-size: 23px;
+        }
+
+        .brand-name {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .brand-subtitle {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 3px;
+        }
+
+        .version {
+            font-size: 11px;
+            color: #a9c4ff;
+            border: 1px solid #5388ff45;
+            background: #5388ff12;
+            padding: 6px 10px;
+            border-radius: 20px;
+        }
+
+        .card {
+            background: linear-gradient(
+                160deg,
+                rgba(23, 36, 61, 0.97),
+                rgba(13, 21, 38, 0.98)
+            );
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            padding: 30px 24px;
+            box-shadow: 0 25px 80px #0004;
+        }
+
+        .eyebrow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            color: #8db4ff;
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+
+        .eyebrow span {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--cyan);
+            box-shadow: 0 0 10px var(--cyan);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 27px;
+            margin: 0;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .description {
+            color: var(--muted);
+            text-align: center;
+            font-size: 13px;
+            line-height: 2;
+            margin: 12px 0 26px;
+        }
+
+        .visualizer {
+            height: 180px;
+            border-radius: 20px;
+            background:
+                radial-gradient(circle at center, #1a3760 0%, #101c32 55%, #0c1425 100%);
+            border: 1px solid #ffffff0b;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 22px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .visualizer::before {
+            content: "";
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border: 1px solid #5388ff18;
+            border-radius: 50%;
+        }
+
+        .orb {
+            width: 78px;
+            height: 78px;
+            border-radius: 50%;
+            background: radial-gradient(
+                circle at 35% 30%,
+                #8af2ff,
+                #4a91ff 45%,
+                #4b50dd 85%
+            );
+            box-shadow:
+                0 0 25px #5388ff70,
+                0 0 65px #5388ff35;
+            animation: breathe 3s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        .sound-waves {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            height: 25px;
+            margin-top: 16px;
+            z-index: 1;
+        }
+
+        .sound-waves span {
+            width: 3px;
+            height: 6px;
+            border-radius: 4px;
+            background: #71baff;
+            opacity: 0.8;
+        }
+
+        .sound-waves span:nth-child(3n) {
+            height: 15px;
+        }
+
+        .sound-waves span:nth-child(2n) {
+            height: 10px;
+        }
+
+        .visualizer.active .sound-waves span {
+            animation: wave 0.7s ease-in-out infinite alternate;
+        }
+
+        .sound-waves span:nth-child(2n) {
+            animation-delay: 0.2s;
+        }
+
+        .sound-waves span:nth-child(3n) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes breathe {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.07);
+            }
+        }
+
+        @keyframes wave {
+            from { transform: scaleY(0.5); }
+            to { transform: scaleY(1.8); }
+        }
+
+        .visualizer-label {
+            color: #a5b7d5;
+            font-size: 11px;
+            margin-top: 5px;
+            z-index: 1;
+        }
+
+        .status-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #080f1e80;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            padding: 13px 15px;
+            margin-bottom: 18px;
+        }
+
+        .status-title {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .status-value {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #8793a9;
+            border-radius: 50%;
+        }
+
+        .status-dot.online {
+            background: #40e6a2;
+            box-shadow: 0 0 10px #40e6a270;
+        }
+
+        button {
+            width: 100%;
+            border: none;
+            border-radius: 13px;
+            padding: 15px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .primary-button {
+            color: white;
+            background: linear-gradient(100deg, #477cff, #3774ec);
+            box-shadow: 0 8px 24px #477cff35;
+        }
+
+        .primary-button:hover {
+            box-shadow: 0 10px 30px #477cff60;
+            filter: brightness(1.08);
+        }
+
+        .secondary-button {
+            color: #a9c4ff;
+            background: #5388ff12;
+            border: 1px solid #5388ff35;
+            margin-top: 10px;
+        }
+
+        .secondary-button:hover {
+            background: #5388ff20;
+        }
+
+        .message {
+            display: none;
+            text-align: center;
+            font-size: 12px;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 15px;
+            line-height: 1.9;
+        }
+
+        .message.success {
+            display: block;
+            color: #70f0ba;
+            background: #40e6a210;
+            border: 1px solid #40e6a225;
+        }
+
+        .message.error {
+            display: block;
+            color: #ff9999;
+            background: #ff555510;
+            border: 1px solid #ff555525;
+        }
+
+        .footer {
+            text-align: center;
+            color: #64738f;
+            font-size: 10px;
+            margin-top: 20px;
+        }
+
+        .footer span {
+            color: #7ca8ff;
+        }
+
+        @media (max-width: 380px) {
+            .card {
+                padding: 24px 18px;
+            }
+
+            h1 {
+                font-size: 23px;
+            }
+
+            .visualizer {
+                height: 160px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-icon">✦</div>
+            <div>
+                <div class="brand-name">دستیار فروش هوشمند</div>
+                <div class="brand-subtitle">AI Sales Assistant</div>
+            </div>
+        </div>
+
+        <div class="version">نسخه آزمایشی</div>
+    </header>
+
+    <main class="card">
+
+        <div class="eyebrow">
+            <span></span>
+            عامل مکالمه هوشمند فارسی
+        </div>
+
+        <h1>همیشه آماده گفتگو</h1>
+
+        <p class="description">
+            تجربه‌ای هوشمند برای تعامل با مشتریان،
+            پاسخ‌گویی و مکالمه طبیعی به زبان فارسی
+        </p>
+
+        <div class="visualizer" id="visualizer">
+            <div class="orb"></div>
+
+            <div class="sound-waves">
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+            </div>
+
+            <div class="visualizer-label" id="visualizerLabel">
+                آماده شروع
+            </div>
+        </div>
+
+        <div class="status-box">
+            <span class="status-title">وضعیت سرور Python</span>
+
+            <div class="status-value">
+                <span class="status-dot" id="statusDot"></span>
+                <span id="statusText">بررسی نشده</span>
+            </div>
+        </div>
+
+        <button class="primary-button" onclick="checkServer()">
+            بررسی اتصال به سرور
+        </button>
+
+        <button class="secondary-button" onclick="demoMode()">
+            مشاهده حالت نمایشی
+        </button>
+
+        <div class="message" id="message"></div>
+
+    </main>
+
+    <footer class="footer">
+        توسعه‌یافته با <span>هوش مصنوعی</span>
+        · نمونه اولیه سیستم فروش
+    </footer>
+
+</div>
+
+<script>
+    async function checkServer() {
+        const statusText = document.getElementById("statusText");
+        const statusDot = document.getElementById("statusDot");
+        const message = document.getElementById("message");
+
+        statusText.textContent = "در حال بررسی...";
+        statusDot.classList.remove("online");
+        message.className = "message";
+        message.textContent = "";
+
+        try {
+            const response = await fetch("/health", {
+                cache: "no-store"
+            });
+
+            if (!response.ok) {
+                throw new Error("Server error");
+            }
+
+            const data = await response.json();
+
+            if (data.status === "ok") {
+                statusText.textContent = "متصل";
+                statusDot.classList.add("online");
+
+                message.textContent =
+                    "اتصال با موفقیت برقرار شد. سرور Python آماده پاسخ‌گویی است.";
+
+                message.className = "message success";
+            } else {
+                throw new Error("Unexpected response");
+            }
+
+        } catch (error) {
+            statusText.textContent = "قطع";
+            statusDot.classList.remove("online");
+
+            message.textContent =
+                "اتصال برقرار نشد. وضعیت سرور Python را بررسی کنید.";
+
+            message.className = "message error";
+        }
+    }
+
+    function demoMode() {
+        const visualizer = document.getElementById("visualizer");
+        const label = document.getElementById("visualizerLabel");
+        const message = document.getElementById("message");
+
+        visualizer.classList.toggle("active");
+
+        if (visualizer.classList.contains("active")) {
+            label.textContent = "حالت نمایشی فعال";
+            message.textContent =
+                "این حالت فقط جلوه بصری دارد؛ مکالمه صوتی هنوز متصل نیست.";
+            message.className = "message success";
+        } else {
+            label.textContent = "آماده شروع";
+            message.className = "message";
+            message.textContent = "";
+        }
+    }
+</script>
+
+</body>
+</html>
