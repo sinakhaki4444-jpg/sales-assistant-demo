@@ -3,153 +3,827 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>دستیار فروش هوشمند</title>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap');
-        :root { --bg: #080d1a; --card: #111a2d; --blue: #5388ff; --cyan: #42d9ff; --text: #f1f5ff; --muted: #8d9bb7; --border: rgba(255,255,255,0.09); }
-        * { box-sizing: border-box; }
-        body { margin: 0; min-height: 100vh; font-family: 'Vazirmatn', Tahoma, sans-serif; color: var(--text); background: radial-gradient(ellipse at 50% 0%, #192c52 0%, transparent 55%), var(--bg); display: flex; justify-content: center; align-items: center; padding: 24px; }
-        .container { width: 100%; max-width: 460px; }
-        .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
-        .brand { display: flex; align-items: center; gap: 12px; }
-        .brand-icon { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 14px; background: linear-gradient(135deg, #477bff, #35d6f4); box-shadow: 0 5px 25px #477bff40; font-size: 23px; }
-        .brand-name { font-size: 15px; font-weight: 700; }
-        .brand-subtitle { font-size: 11px; color: var(--muted); margin-top: 3px; }
-        .version { font-size: 11px; color: #a9c4ff; border: 1px solid #5388ff45; background: #5388ff12; padding: 6px 10px; border-radius: 20px; }
-        .card { background: linear-gradient(160deg, rgba(23, 36, 61, 0.97), rgba(13, 21, 38, 0.98)); border: 1px solid var(--border); border-radius: 25px; padding: 30px 24px; box-shadow: 0 25px 80px #0004; }
-        .eyebrow { display: flex; justify-content: center; align-items: center; gap: 8px; color: #8db4ff; font-size: 12px; margin-bottom: 12px; }
-        .eyebrow span { width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
-        h1 { text-align: center; font-size: 27px; margin: 0; font-weight: 800; letter-spacing: -1px; }
-        .description { color: var(--muted); text-align: center; font-size: 13px; line-height: 2; margin: 12px 0 26px; }
-        .visualizer { height: 180px; border-radius: 20px; background: radial-gradient(circle at center, #1a3760 0%, #101c32 55%, #0c1425 100%); border: 1px solid #ffffff0b; display: flex; flex-direction: column; justify-content: center; align-items: center; margin-bottom: 22px; position: relative; overflow: hidden; transition: 0.3s; }
-        .visualizer.recording { border-color: #5388ff; box-shadow: inset 0 0 20px #5388ff20; }
-        .orb { width: 78px; height: 78px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #8af2ff, #4a91ff 45%, #4b50dd 85%); box-shadow: 0 0 25px #5388ff70, 0 0 65px #5388ff35; animation: breathe 3s ease-in-out infinite; z-index: 1; transition: 0.3s; }
-        .visualizer.recording .orb { background: radial-gradient(circle at center, #ff5e5e, #c0392b); box-shadow: 0 0 40px #ff5e5e60; }
-        .sound-waves { display: flex; align-items: center; justify-content: center; gap: 4px; height: 25px; margin-top: 16px; z-index: 1; visibility: hidden; }
-        .visualizer.recording .sound-waves { visibility: visible; }
-        .sound-waves span { width: 3px; height: 6px; border-radius: 4px; background: #71baff; opacity: 0.8; animation: wave 0.7s ease-in-out infinite alternate; }
-        .sound-waves span:nth-child(even) { animation-delay: 0.2s; }
-        .sound-waves span:nth-child(3n) { animation-delay: 0.4s; }
-        @keyframes breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.07); } }
-        @keyframes wave { from { transform: scaleY(0.5); } to { transform: scaleY(1.8); } }
-        .visualizer-label { color: #a5b7d5; font-size: 11px; margin-top: 5px; z-index: 1; }
-        .status-box { display: flex; align-items: center; justify-content: space-between; background: #080f1e80; border: 1px solid var(--border); border-radius: 13px; padding: 13px 15px; margin-bottom: 18px; }
-        .status-title { font-size: 12px; color: var(--muted); }
-        .status-value { display: flex; align-items: center; gap: 8px; font-size: 12px; }
-        .status-dot { width: 8px; height: 8px; background: #8793a9; border-radius: 50%; }
-        .status-dot.online { background: #40e6a2; box-shadow: 0 0 10px #40e6a270; }
-        button { width: 100%; border: none; border-radius: 13px; padding: 15px; font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.2s; margin-bottom: 10px; }
-        button:active { transform: scale(0.98); }
-        .mic-btn { color: white; background: linear-gradient(100deg, #5388ff, #477cff); border: 1px solid #ffffff20; }
-        .mic-btn.recording { background: #e74c3c; box-shadow: 0 0 20px #e74c3c60; }
-        .secondary-button { color: #a9c4ff; background: #5388ff12; border: 1px solid #5388ff35; }
-        .message { display: none; text-align: center; font-size: 12px; padding: 12px; border-radius: 10px; margin-top: 15px; line-height: 1.9; }
-        .message.success { display: block; color: #70f0ba; background: #40e6a210; border: 1px solid #40e6a225; }
-        .message.error { display: block; color: #ff9999; background: #ff555510; border: 1px solid #ff555525; }
+
+        :root {
+            --bg: #080d1a;
+            --card: #111a2d;
+            --blue: #5388ff;
+            --cyan: #42d9ff;
+            --text: #f1f5ff;
+            --muted: #8d9bb7;
+            --border: rgba(255,255,255,0.09);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Vazirmatn', Tahoma, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(ellipse at 50% 0%, #192c52 0%, transparent 55%),
+                var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 460px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 46px;
+            height: 46px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #477bff, #35d6f4);
+            box-shadow: 0 5px 25px #477bff40;
+            font-size: 23px;
+        }
+
+        .brand-name {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .brand-subtitle {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 3px;
+        }
+
+        .version {
+            flex-shrink: 0;
+            font-size: 11px;
+            color: #a9c4ff;
+            border: 1px solid #5388ff45;
+            background: #5388ff12;
+            padding: 6px 10px;
+            border-radius: 20px;
+        }
+
+        .card {
+            background: linear-gradient(
+                160deg,
+                rgba(23, 36, 61, 0.97),
+                rgba(13, 21, 38, 0.98)
+            );
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            padding: 30px 24px;
+            box-shadow: 0 25px 80px #0004;
+        }
+
+        .eyebrow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            color: #8db4ff;
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+
+        .eyebrow span {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--cyan);
+            box-shadow: 0 0 10px var(--cyan);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 27px;
+            margin: 0;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .description {
+            color: var(--muted);
+            text-align: center;
+            font-size: 13px;
+            line-height: 2;
+            margin: 12px 0 26px;
+        }
+
+        .visualizer {
+            height: 180px;
+            border-radius: 20px;
+            background:
+                radial-gradient(
+                    circle at center,
+                    #1a3760 0%,
+                    #101c32 55%,
+                    #0c1425 100%
+                );
+            border: 1px solid #ffffff0b;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 22px;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .visualizer::before {
+            content: "";
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border: 1px solid #5388ff18;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .orb {
+            width: 78px;
+            height: 78px;
+            border-radius: 50%;
+            background: radial-gradient(
+                circle at 35% 30%,
+                #8af2ff,
+                #4a91ff 45%,
+                #4b50dd 85%
+            );
+            box-shadow:
+                0 0 25px #5388ff70,
+                0 0 65px #5388ff35;
+            animation: breathe 3s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        .visualizer.mic-active {
+            border-color: #40e6a255;
+            box-shadow: inset 0 0 25px #40e6a210;
+        }
+
+        .visualizer.mic-active .orb {
+            background: radial-gradient(
+                circle at 35% 30%,
+                #afffe1,
+                #40dba0 45%,
+                #148777 85%
+            );
+            box-shadow:
+                0 0 25px #40e6a270,
+                0 0 65px #40e6a235;
+        }
+
+        .sound-waves {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            height: 25px;
+            margin-top: 16px;
+            z-index: 1;
+        }
+
+        .sound-waves span {
+            width: 3px;
+            height: 6px;
+            border-radius: 4px;
+            background: #71baff;
+            opacity: 0.8;
+        }
+
+        .sound-waves span:nth-child(3n) {
+            height: 15px;
+        }
+
+        .sound-waves span:nth-child(2n) {
+            height: 10px;
+        }
+
+        .visualizer.active .sound-waves span {
+            animation: wave 0.7s ease-in-out infinite alternate;
+        }
+
+        .visualizer.active .sound-waves span:nth-child(2n) {
+            animation-delay: 0.2s;
+        }
+
+        .visualizer.active .sound-waves span:nth-child(3n) {
+            animation-delay: 0.4s;
+        }
+
+        .visualizer.mic-active .sound-waves span {
+            background: #70f0ba;
+        }
+
+        @keyframes breathe {
+            0%, 100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.07);
+            }
+        }
+
+        @keyframes wave {
+            from {
+                transform: scaleY(0.5);
+            }
+
+            to {
+                transform: scaleY(1.8);
+            }
+        }
+
+        .visualizer-label {
+            color: #a5b7d5;
+            font-size: 11px;
+            margin-top: 5px;
+            z-index: 1;
+        }
+
+        .status-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            background: #080f1e80;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            padding: 13px 15px;
+            margin-bottom: 12px;
+        }
+
+        .status-title {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .status-value {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            flex-shrink: 0;
+            background: #8793a9;
+            border-radius: 50%;
+        }
+
+        .status-dot.online {
+            background: #40e6a2;
+            box-shadow: 0 0 10px #40e6a270;
+        }
+
+        .button-group {
+            display: grid;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        button {
+            width: 100%;
+            border: none;
+            border-radius: 13px;
+            padding: 15px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button:focus-visible {
+            outline: 2px solid var(--cyan);
+            outline-offset: 3px;
+        }
+
+        button:disabled {
+            opacity: 0.65;
+            cursor: wait;
+        }
+
+        .primary-button {
+            color: white;
+            background: linear-gradient(100deg, #477cff, #3774ec);
+            box-shadow: 0 8px 24px #477cff35;
+        }
+
+        .primary-button:hover:not(:disabled) {
+            box-shadow: 0 10px 30px #477cff60;
+            filter: brightness(1.08);
+        }
+
+        .mic-button {
+            color: white;
+            background: linear-gradient(100deg, #168f79, #117764);
+            border: 1px solid #40e6a240;
+            box-shadow: 0 8px 24px #40e6a215;
+        }
+
+        .mic-button:hover:not(:disabled) {
+            filter: brightness(1.12);
+        }
+
+        .mic-button.connected {
+            background: linear-gradient(100deg, #e45160, #bb3548);
+            border-color: #ff7d8b50;
+            box-shadow: 0 8px 24px #e4516030;
+        }
+
+        .secondary-button {
+            color: #a9c4ff;
+            background: #5388ff12;
+            border: 1px solid #5388ff35;
+        }
+
+        .secondary-button:hover {
+            background: #5388ff20;
+        }
+
+        .message {
+            display: none;
+            text-align: center;
+            font-size: 12px;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 15px;
+            line-height: 1.9;
+            overflow-wrap: anywhere;
+        }
+
+        .message.success {
+            display: block;
+            color: #70f0ba;
+            background: #40e6a210;
+            border: 1px solid #40e6a225;
+        }
+
+        .message.error {
+            display: block;
+            color: #ff9999;
+            background: #ff555510;
+            border: 1px solid #ff555525;
+        }
+
+        .message.info {
+            display: block;
+            color: #a9c4ff;
+            background: #5388ff12;
+            border: 1px solid #5388ff35;
+        }
+
+        .footer {
+            text-align: center;
+            color: #64738f;
+            font-size: 10px;
+            margin-top: 20px;
+        }
+
+        .footer span {
+            color: #7ca8ff;
+        }
+
+        @media (max-width: 380px) {
+            body {
+                padding: 16px;
+            }
+
+            .card {
+                padding: 24px 18px;
+            }
+
+            h1 {
+                font-size: 23px;
+            }
+
+            .visualizer {
+                height: 160px;
+            }
+
+            .brand-name {
+                font-size: 13px;
+            }
+
+            .version {
+                font-size: 10px;
+                padding: 5px 8px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .orb,
+            .visualizer.active .sound-waves span {
+                animation: none;
+            }
+
+            button,
+            .visualizer {
+                transition: none;
+            }
+        }
     </style>
 </head>
+
 <body>
+
 <div class="container">
+
     <header class="topbar">
         <div class="brand">
-            <div class="brand-icon">✦</div>
+            <div class="brand-icon" aria-hidden="true">✦</div>
+
             <div>
                 <div class="brand-name">دستیار فروش هوشمند</div>
                 <div class="brand-subtitle">AI Sales Assistant</div>
             </div>
         </div>
+
         <div class="version">نسخه آزمایشی</div>
     </header>
 
     <main class="card">
-        <div class="eyebrow"><span></span>عامل مکالمه هوشمند فارسی</div>
-        <h1>همیشه آماده گفتگو</h1>
-        <p class="description">برای شروع مکالمه، دکمه میکروفون را بزنید و صحبت کنید.</p>
 
-        <div class="visualizer" id="visualizer">
-            <div class="orb"></div>
-            <div class="sound-waves">
-                <span></span><span></span><span></span><span></span><span></span><span></span>
-            </div>
-            <div class="visualizer-label" id="visualizerLabel">آماده شروع</div>
+        <div class="eyebrow">
+            <span aria-hidden="true"></span>
+            عامل مکالمه هوشمند فارسی
         </div>
 
-        <button id="micBtn" class="mic-btn" onclick="toggleVoice()">
-            شروع ضبط صدا
-        </button>
+        <h1>همیشه آماده گفتگو</h1>
 
-        <button class="secondary-button" onclick="checkServer()">بررسی وضعیت سرور</button>
-        <div class="message" id="message"></div>
+        <p class="description">
+            تجربه‌ای هوشمند برای تعامل با مشتریان،
+            پاسخ‌گویی و مکالمه طبیعی به زبان فارسی
+        </p>
+
+        <div class="visualizer" id="visualizer">
+            <div class="orb" aria-hidden="true"></div>
+
+            <div class="sound-waves" aria-hidden="true">
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+            </div>
+
+            <div class="visualizer-label" id="visualizerLabel">
+                آماده شروع
+            </div>
+        </div>
+
+        <div class="status-box">
+            <span class="status-title">وضعیت سرور Python</span>
+
+            <div class="status-value" role="status">
+                <span class="status-dot" id="statusDot"></span>
+                <span id="statusText">بررسی نشده</span>
+            </div>
+        </div>
+
+        <div class="status-box">
+            <span class="status-title">وضعیت میکروفون</span>
+
+            <div class="status-value" role="status">
+                <span class="status-dot" id="micStatusDot"></span>
+                <span id="micStatusText">غیرفعال</span>
+            </div>
+        </div>
+
+        <div class="button-group">
+
+            <button
+                class="mic-button"
+                id="micButton"
+                type="button"
+                aria-pressed="false"
+                onclick="toggleMicrophone()"
+            >
+                🎙️ فعال کردن میکروفون
+            </button>
+
+            <button
+                class="primary-button"
+                id="serverButton"
+                type="button"
+                onclick="checkServer()"
+            >
+                بررسی اتصال به سرور
+            </button>
+
+            <button
+                class="secondary-button"
+                id="demoButton"
+                type="button"
+                aria-pressed="false"
+                onclick="demoMode()"
+            >
+                مشاهده حالت نمایشی
+            </button>
+
+        </div>
+
+        <div class="message" id="message" role="status"></div>
+
     </main>
 
-    <footer style="text-align: center; color: #64738f; font-size: 10px; margin-top: 20px;">
+    <footer class="footer">
         توسعه‌یافته با <span>هوش مصنوعی</span>
+        · نمونه اولیه سیستم فروش
     </footer>
+
 </div>
 
 <script>
-    // تنظیمات تشخیص گفتار
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
-    recognition.lang = 'fa-IR'; // تنظیم زبان فارسی
-    recognition.continuous = false;
-
-    const micBtn = document.getElementById("micBtn");
     const visualizer = document.getElementById("visualizer");
-    const label = document.getElementById("visualizerLabel");
+    const visualizerLabel = document.getElementById("visualizerLabel");
     const message = document.getElementById("message");
 
-    function toggleVoice() {
-        if (micBtn.classList.contains("recording")) {
-            recognition.stop();
+    const micButton = document.getElementById("micButton");
+    const micStatusText = document.getElementById("micStatusText");
+    const micStatusDot = document.getElementById("micStatusDot");
+
+    const serverButton = document.getElementById("serverButton");
+    const statusText = document.getElementById("statusText");
+    const statusDot = document.getElementById("statusDot");
+
+    const demoButton = document.getElementById("demoButton");
+
+    let microphoneStream = null;
+    let microphonePending = false;
+    let demoActive = false;
+
+    function showMessage(text, type = "info") {
+        message.textContent = text;
+        message.className = "message " + type;
+    }
+
+    function updateInterface() {
+        const micActive = Boolean(microphoneStream);
+
+        visualizer.classList.toggle("active", micActive || demoActive);
+        visualizer.classList.toggle("mic-active", micActive);
+
+        micButton.classList.toggle("connected", micActive);
+        micButton.setAttribute("aria-pressed", String(micActive));
+
+        micButton.textContent = micActive
+            ? "⏹️ قطع میکروفون"
+            : "🎙️ فعال کردن میکروفون";
+
+        micStatusText.textContent = micActive ? "فعال" : "غیرفعال";
+        micStatusDot.classList.toggle("online", micActive);
+
+        demoButton.setAttribute("aria-pressed", String(demoActive));
+        demoButton.textContent = demoActive
+            ? "توقف حالت نمایشی"
+            : "مشاهده حالت نمایشی";
+
+        if (micActive) {
+            visualizerLabel.textContent = "میکروفون فعال است";
+        } else if (demoActive) {
+            visualizerLabel.textContent = "حالت نمایشی فعال";
         } else {
-            recognition.start();
+            visualizerLabel.textContent = "آماده شروع";
         }
     }
 
-    recognition.onstart = () => {
-        micBtn.textContent = "در حال گوش دادن...";
-        micBtn.classList.add("recording");
-        visualizer.classList.add("recording");
-        label.textContent = "لطفا صحبت کنید...";
-        message.className = "message";
-        message.textContent = "";
-    };
+    function disconnectMicrophone(showNotice = true) {
+        const stream = microphoneStream;
+        microphoneStream = null;
 
-    recognition.onend = () => {
-        micBtn.textContent = "شروع ضبط صدا";
-        micBtn.classList.remove("recording");
-        visualizer.classList.remove("recording");
-        label.textContent = "آماده شروع";
-    };
+        if (stream) {
+            stream.getTracks().forEach((track) => {
+                track.stop();
+            });
+        }
 
-    recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        message.textContent = "متن شنیده شده: " + transcript;
-        message.className = "message success";
-        // در اینجا می‌توانید متن transcript را به سرور بفرستید
-    };
+        updateInterface();
 
-    recognition.onerror = (event) => {
-        message.textContent = "خطا در دسترسی به میکروفون: " + event.error;
-        message.className = "message error";
-    };
+        if (showNotice) {
+            showMessage("میکروفون قطع شد.", "info");
+        }
+    }
+
+    async function toggleMicrophone() {
+        if (microphonePending) {
+            return;
+        }
+
+        if (microphoneStream) {
+            disconnectMicrophone();
+            return;
+        }
+
+        if (!window.isSecureContext) {
+            showMessage(
+                "برای فعال کردن میکروفون، صفحه را از طریق HTTPS یا localhost باز کنید.",
+                "error"
+            );
+            return;
+        }
+
+        if (!navigator.mediaDevices ||
+            !navigator.mediaDevices.getUserMedia) {
+            showMessage(
+                "دسترسی به میکروفون در این مرورگر در دسترس نیست. صفحه را در نسخه به‌روز Chrome، Edge یا Firefox باز کنید.",
+                "error"
+            );
+            return;
+        }
+
+        microphonePending = true;
+        micButton.disabled = true;
+        micButton.textContent = "در حال اتصال به میکروفون...";
+        micStatusText.textContent = "در انتظار اجازه";
+
+        showMessage(
+            "در پیام مرورگر، اجازه دسترسی به میکروفون را تأیید کنید.",
+            "info"
+        );
+
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                audio: true,
+                video: false
+            });
+
+            const audioTrack = stream.getAudioTracks()[0];
+
+            if (!audioTrack || audioTrack.readyState !== "live") {
+                stream.getTracks().forEach((track) => track.stop());
+                throw new Error("MicrophoneUnavailable");
+            }
+
+            microphoneStream = stream;
+
+            audioTrack.addEventListener("ended", () => {
+                if (microphoneStream === stream) {
+                    disconnectMicrophone(false);
+
+                    showMessage(
+                        "ارتباط با میکروفون قطع شد. دوباره آن را فعال کنید.",
+                        "error"
+                    );
+                }
+            });
+
+            updateInterface();
+
+            showMessage(
+                "میکروفون با موفقیت فعال شد. برای قطع دسترسی، دکمه «قطع میکروفون» را بزنید.",
+                "success"
+            );
+
+        } catch (error) {
+            const errors = {
+                NotAllowedError:
+                    "اجازه دسترسی به میکروفون داده نشد. مجوز میکروفون را از تنظیمات سایت در مرورگر فعال کنید.",
+
+                NotFoundError:
+                    "میکروفونی پیدا نشد. اتصال میکروفون را بررسی کنید.",
+
+                NotReadableError:
+                    "میکروفون در دسترس نیست. تنظیمات دستگاه و برنامه‌های دیگری که از میکروفون استفاده می‌کنند را بررسی کنید.",
+
+                AbortError:
+                    "فعال‌سازی میکروفون متوقف شد. دوباره تلاش کنید.",
+
+                SecurityError:
+                    "دسترسی به میکروفون در این صفحه توسط مرورگر محدود شده است."
+            };
+
+            updateInterface();
+
+            showMessage(
+                errors[error.name] ||
+                "فعال کردن میکروفون ناموفق بود. اتصال و مجوزهای میکروفون را بررسی کنید.",
+                "error"
+            );
+
+        } finally {
+            microphonePending = false;
+            micButton.disabled = false;
+            updateInterface();
+        }
+    }
 
     async function checkServer() {
-        // تابع قبلی شما
-        const message = document.getElementById("message");
-        message.textContent = "در حال بررسی ارتباط...";
-        message.className = "message";
+        if (serverButton.disabled) {
+            return;
+        }
+
+        serverButton.disabled = true;
+        serverButton.textContent = "در حال بررسی...";
+        statusText.textContent = "در حال بررسی...";
+        statusDot.classList.remove("online");
+
+        showMessage("در حال بررسی اتصال به سرور Python...", "info");
+
+        const controller = new AbortController();
+        const timeoutId = window.setTimeout(() => {
+            controller.abort();
+        }, 10000);
+
         try {
-            // شبیه‌سازی بررسی
-            await new Promise(r => setTimeout(r, 1000));
-            message.textContent = "سرور متصل است.";
-            message.className = "message success";
-        } catch {
-            message.textContent = "خطا در اتصال.";
-            message.className = "message error";
+            const response = await fetch("/health", {
+                cache: "no-store",
+                signal: controller.signal
+            });
+
+            if (!response.ok) {
+                throw new Error("ServerError");
+            }
+
+            const data = await response.json();
+
+            if (data.status !== "ok") {
+                throw new Error("UnexpectedResponse");
+            }
+
+            statusText.textContent = "متصل";
+            statusDot.classList.add("online");
+
+            showMessage(
+                "اتصال با موفقیت برقرار شد. سرور Python آماده پاسخ‌گویی است.",
+                "success"
+            );
+
+        } catch (error) {
+            statusText.textContent = "قطع";
+            statusDot.classList.remove("online");
+
+            showMessage(
+                error.name === "AbortError"
+                    ? "سرور در زمان مشخص پاسخ نداد. وضعیت سرور Python را بررسی کنید."
+                    : "اتصال برقرار نشد. سرور Python و مسیر /health را بررسی کنید.",
+                "error"
+            );
+
+        } finally {
+            window.clearTimeout(timeoutId);
+            serverButton.disabled = false;
+            serverButton.textContent = "بررسی اتصال به سرور";
         }
     }
+
+    function demoMode() {
+        demoActive = !demoActive;
+        updateInterface();
+
+        if (demoActive) {
+            showMessage(
+                "حالت نمایشی فعال است. حرکت امواج یک جلوه بصری است و شدت واقعی صدا را نمایش نمی‌دهد.",
+                "info"
+            );
+        } else {
+            showMessage("حالت نمایشی متوقف شد.", "info");
+        }
+    }
+
+    window.addEventListener("pagehide", () => {
+        disconnectMicrophone(false);
+    });
+
+    updateInterface();
 </script>
+
 </body>
 </html>
